@@ -10,6 +10,8 @@ interface Course {
   image: string;
 }
 
+
+
 export default function CourseList() {
   const [courses, setCourses] = useState<Course[]>([]);
 

@@ -6,14 +6,15 @@ import { useRouter } from 'next/navigation';
 import CourseForm from '@/components/admin/CourseForm';
 import CourseTable from '@/components/admin/CourseTable';
 
+// ✅ Course Interface (ต้องตรงกับ CourseTable)
 interface Course {
   _id: string;
   title: string;
   branch: string;
   price: number;
-  description: string;
-  schedule: string;
-  image: string;
+  description: string;    // ✅ ต้องมี
+  schedule: string;       // ✅ ต้องมี
+  image: string;          // ✅ ต้องมี
   isActive: boolean;
 }
 
@@ -26,10 +27,10 @@ export default function AdminCoursesPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-/*     if (!session || (session.user as any)?.role !== 'admin') {
+    if (!session || (session.user as any)?.role !== 'admin') {
       router.push('/login');
       return;
-    } */
+    } 
     fetchCourses();
   }, [session, router]);
 
@@ -47,11 +48,15 @@ export default function AdminCoursesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  // ✅ แก้ไข: รับ course แทน id
+  const handleDelete = async (course: Course) => {
     if (!confirm('ต้องการลบคอร์สนี้หรือไม่?')) return;
 
     try {
-      const res = await fetch(`/api/admin/courses/${id}`, { method: 'DELETE' });
+      // ✅ ใช้ course._id แทน id
+      const res = await fetch(`/api/admin/courses/${course._id}`, { 
+        method: 'DELETE' 
+      });
       const data = await res.json();
       if (data.success) {
         fetchCourses();
@@ -89,7 +94,12 @@ export default function AdminCoursesPage() {
         </button>
       </div>
 
-      <CourseTable courses={courses} onEdit={handleEdit} onDelete={handleDelete} />
+      {/* ✅ ตอนนี้ onEdit และ onDelete ตรงกับที่ CourseTable ต้องการ */}
+      <CourseTable 
+        courses={courses} 
+        onEdit={handleEdit} 
+        onDelete={handleDelete} 
+      />
 
       {isFormOpen && (
         <CourseForm

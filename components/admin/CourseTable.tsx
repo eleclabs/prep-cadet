@@ -5,16 +5,20 @@ interface Course {
   title: string;
   branch: string;
   price: number;
+  description: string;
+  schedule: string;
+  image: string;
   isActive: boolean;
 }
 
 interface CourseTableProps {
   courses: Course[];
-  onEdit: (course: Course) => void;
-  onDelete: (id: string) => void;
+  onEdit: (course: Course) => void;      // ✅ ต้องรับ Course
+  onDelete: (course: Course) => void;    // ✅ ต้องรับ Course (ไม่ใช่ id)
 }
 
-export default function CourseTable({ courses, onEdit, onDelete }: CourseTableProps) {
+
+/* export default function CourseTable({ courses, onEdit, onDelete }: CourseTableProps) {
   const branchLabels: Record<string, string> = {
     Army: 'กองทัพบก',
     Navy: 'กองทัพเรือ',
@@ -75,5 +79,34 @@ export default function CourseTable({ courses, onEdit, onDelete }: CourseTablePr
         <div className="text-center py-8 text-gray-500">ยังไม่มีคอร์สเรียน</div>
       )}
     </div>
+  );
+} */
+
+export default function CourseTable({ courses, onEdit, onDelete }: CourseTableProps) {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>ชื่อคอร์ส</th>
+          <th>สาขา</th>
+          <th>ราคา</th>
+          <th>การจัดการ</th>
+        </tr>
+      </thead>
+      <tbody>
+        {courses.map((course) => (
+          <tr key={course._id}>
+            <td>{course.title}</td>
+            <td>{course.branch}</td>
+            <td>{course.price}</td>
+            <td>
+              {/* ✅ ส่ง course ทั้งก้อน ไม่ใช่แค่ id */}
+              <button onClick={() => onEdit(course)}>แก้ไข</button>
+              <button onClick={() => onDelete(course)}>ลบ</button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
