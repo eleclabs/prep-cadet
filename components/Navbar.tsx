@@ -20,6 +20,7 @@ export default function Navbar() {
         <div className="hidden md:flex space-x-6 items-center">
           <Link href="/" className="hover:text-yellow-400">หน้าแรก</Link>
           <Link href="/courses" className="hover:text-yellow-400">หลักสูตร</Link> {/* เพิ่ม */}
+          <Link href="/activities" className="hover:text-yellow-400">กิจกรรม</Link> {/* เพิ่ม */}
           <Link href="/about" className="hover:text-yellow-400">เกี่ยวกับเรา</Link> {/* เพิ่ม */}
           <Link href="/contact" className="hover:text-yellow-400">ติดต่อเรา</Link> {/* เพิ่ม */}
 
