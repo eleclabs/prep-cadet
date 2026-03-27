@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+/* import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -28,6 +28,50 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
+    </html>
+  );
+} */
+
+
+// app/layout.tsx
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css"; // นำเข้า CSS ของ Tailwind
+
+import Providers from "@/components/Providers"; // Import Wrapper ที่สร้างใหม่
+import Navbar from "@/components/Navbar";       // Import Navbar
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "โรงเรียนกวดวิชาเตรียมทหาร",
+  description: "สถาบันกวดวิชาเพื่อสอบเข้าโรงเรียนเตรียมทหารชั้นนำ",
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="th">
+      <body className={inter.className}>
+        {/* หุ้มทุกอย่างด้วย Providers เพื่อให้ใช้ Session ได้ทั่วทั้งแอป */}
+        <Providers>
+          {/* Navbar จะอยู่ด้านบนสุดของทุกหน้า */}
+          <Navbar />
+          
+          {/* เนื้อหาของหน้าเว็บแต่ละหน้า */}
+          <main className="min-h-screen">
+            {children}
+          </main>
+
+          {/* Footer (ถ้ามี) */}
+          <footer className="bg-slate-900 text-white text-center py-6">
+            <p>&copy; 2026 Prep Cadet School. All rights reserved.</p>
+          </footer>
+        </Providers>
+      </body>
     </html>
   );
 }
