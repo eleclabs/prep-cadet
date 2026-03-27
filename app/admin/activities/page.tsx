@@ -1,31 +1,36 @@
+// app/admin/activities/page.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';  // ✅ ตรวจสอบว่า import ถูกต้อง
 import { useRouter } from 'next/navigation';
 import ActivityForm from '@/components/admin/ActivityForm';
 import ActivityTable from '@/components/admin/ActivityTable';
 
+// ✅ Activity Interface (ต้องตรงกับ ActivityTable)
 interface Activity {
   _id: string;
   title: string;
   description: string;
   image: string;
   category: string;
-  eventDate: string;
+  eventDate: string;    // ✅ ต้องมี
   isActive: boolean;
   order: number;
 }
 
 export default function AdminActivitiesPage() {
-  const {  session } = useSession();
+  // ✅ แก้ไข: ต้องเป็น { data: session } ไม่ใช่ { session }
+  const { data: session } = useSession();
   const router = useRouter();
+  
   const [activities, setActivities] = useState<Activity[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingActivity, setEditingActivity] = useState<Activity | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // ✅ ตรวจสอบ session อย่างปลอดภัย
     if (!session || (session.user as any)?.role !== 'admin') {
       router.push('/login');
       return;
@@ -47,17 +52,22 @@ export default function AdminActivitiesPage() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  // ✅ แก้ไข: รับ activity แทน id (ให้ตรงกับที่ ActivityTable ต้องการ)
+  const handleDelete = async (activity: Activity) => {
     if (!confirm('ต้องการลบกิจกรรมนี้หรือไม่?')) return;
 
     try {
-      const res = await fetch(`/api/admin/activities/${id}`, { method: 'DELETE' });
+      // ✅ ใช้ activity._id แทน id
+      const res = await fetch(`/api/admin/activities/${activity._id}`, { 
+        method: 'DELETE' 
+      });
       const data = await res.json();
       if (data.success) {
         fetchActivities();
         alert('ลบกิจกรรมเรียบร้อยแล้ว');
       }
     } catch (error) {
+      console.error('Delete error:', error);
       alert('เกิดข้อผิดพลาดในการลบ');
     }
   };
@@ -89,6 +99,7 @@ export default function AdminActivitiesPage() {
         </button>
       </div>
 
+      {/* ✅ ตอนนี้ onEdit และ onDelete ตรงกับที่ ActivityTable ต้องการ */}
       <ActivityTable 
         activities={activities} 
         onEdit={handleEdit} 

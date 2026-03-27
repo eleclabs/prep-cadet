@@ -5,10 +5,10 @@ import { authOptions } from '@/lib/auth-options';
 import dbConnect from '@/lib/db';
 import { Activity } from '@/models/Activity';
 
-// GET: ดึงกิจกรรมตาม ID
+// ✅ GET: ดึงกิจกรรมตาม ID
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }  // ✅ params เป็น Promise
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -17,20 +17,25 @@ export async function GET(
     }
 
     await dbConnect();
-    const activity = await Activity.findById(params.id);
+    
+    // ✅ ต้อง await params ก่อนดึง id
+    const { id } = await params;
+    
+    const activity = await Activity.findById(id);  // ✅ ใช้ id ที่ await แล้ว
     if (!activity) {
       return NextResponse.json({ error: 'Activity not found' }, { status: 404 });
     }
     return NextResponse.json({ success: true, activity });
   } catch (error) {
+    console.error('GET activity error:', error);
     return NextResponse.json({ success: false, error: 'Failed to fetch activity' }, { status: 500 });
   }
 }
 
-// PUT: แก้ไขกิจกรรม
+// ✅ PUT: แก้ไขกิจกรรม
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }  // ✅ params เป็น Promise
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -39,21 +44,30 @@ export async function PUT(
     }
 
     await dbConnect();
+    
+    // ✅ ต้อง await params ก่อนดึง id
+    const { id } = await params;
+    
     const body = await req.json();
-    const activity = await Activity.findByIdAndUpdate(params.id, body, { new: true });
+    const activity = await Activity.findByIdAndUpdate(id, body, {  // ✅ ใช้ id ที่ await แล้ว
+      new: true, 
+      runValidators: true 
+    });
+    
     if (!activity) {
       return NextResponse.json({ error: 'Activity not found' }, { status: 404 });
     }
     return NextResponse.json({ success: true, activity });
   } catch (error) {
+    console.error('PUT activity error:', error);
     return NextResponse.json({ success: false, error: 'Failed to update activity' }, { status: 500 });
   }
 }
 
-// DELETE: ลบกิจกรรม
+// ✅ DELETE: ลบกิจกรรม
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }  // ✅ params เป็น Promise
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -62,12 +76,17 @@ export async function DELETE(
     }
 
     await dbConnect();
-    const activity = await Activity.findByIdAndDelete(params.id);
+    
+    // ✅ ต้อง await params ก่อนดึง id
+    const { id } = await params;
+    
+    const activity = await Activity.findByIdAndDelete(id);  // ✅ ใช้ id ที่ await แล้ว
     if (!activity) {
       return NextResponse.json({ error: 'Activity not found' }, { status: 404 });
     }
     return NextResponse.json({ success: true, message: 'Activity deleted' });
   } catch (error) {
+    console.error('DELETE activity error:', error);
     return NextResponse.json({ success: false, error: 'Failed to delete activity' }, { status: 500 });
   }
 }
