@@ -21,6 +21,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <a href="/admin/courses" className="block py-3 px-6 hover:bg-slate-800">จัดการคอร์ส</a>
           <a href="/admin/students" className="block py-3 px-6 hover:bg-slate-800">รายชื่อนักเรียน</a>
           <a href="/admin/activities" className="block py-3 px-6 hover:bg-slate-800">จัดการกิจกรรม</a> {/* เพิ่ม */}
+          <a href="/admin/exams" className="block py-3 px-6 hover:bg-slate-800">จัดการข้อสอบ</a> {/* เพิ่ม */}
+          <a href="/admin/exam-results" className="block py-3 px-6 hover:bg-slate-800">ผลการสอบ</a> {/* เพิ่ม */}
         </nav>
       </aside>
       
